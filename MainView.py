@@ -19,6 +19,7 @@ from pathlib import Path
 from Data import Data
 from compound import Compound
 from Network_Viewer import Network_Viewer
+from Molecule_Inspector import Molecule_Inspector
 
 
 
@@ -56,8 +57,10 @@ class MainView():
 
         self.file_menu = tk.Menu(self.menu_bar,tearoff=False)
         self.network_menu = tk.Menu(self.menu_bar,tearoff=False)
+        self.molecule_menu = tk.Menu(self.menu_bar,tearoff=False)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
         self.menu_bar.add_cascade(label="Network", menu=self.network_menu)
+        self.menu_bar.add_cascade(label="Molecules", menu=self.molecule_menu)
 
         self.network_menu.add_command(label="Cellular Component", command=lambda: self.view_network("Cellular Component"))
         self.network_menu.add_command(label="Molecular Function", command=lambda: self.view_network("Molecular Function"))
@@ -65,6 +68,8 @@ class MainView():
 
         self.file_menu.add_command(label="Load from CSV file", command=self.load_data_from_csv)
         self.file_menu.add_command(label="Load from Pickle file", command=self.load_data_from_pickle)
+
+        self.molecule_menu.add_command(label="Molecule Inspector", command=self.open_molecule_inspector)
 
         self.root_frame = ttk.Frame(self.root)
         self.root_frame.pack(fill=tk.BOTH, expand=tk.TRUE)
@@ -172,6 +177,11 @@ class MainView():
 
         self.root.mainloop()
 
+
+
+    def open_molecule_inspector(self):
+        a = Molecule_Inspector(self.root,"Molecule Inspector",self.data.full_data)
+
     def view_network(self,cond):
         #create graph
         G = nx.Graph()
@@ -224,17 +234,6 @@ class MainView():
         #plot and display network
 
         a = Network_Viewer(self.root,cond,G,self.data.full_data)
-
-    #    for path in nx.all_simple_paths(G,"YME1","GPT2",3):
-    #        counter = 0
-    #        out_string = ""
-    #        try:
-    #            for i in range(len(path)):
-    #                out_string += path[counter]
-    #                out_string += " ---[" + G[path[counter]][path[counter+1]]["label"] + "]--- "
-    #                counter += 1
-    #        except:
-    #            print(out_string)
 
 
 
