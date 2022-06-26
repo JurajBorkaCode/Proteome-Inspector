@@ -20,6 +20,7 @@ from Data import Data
 from compound import Compound
 from Network_Viewer import Network_Viewer
 from Molecule_Inspector import Molecule_Inspector
+from Molecule_Network_Viewer import Molecule_Network_Viewer
 
 
 
@@ -70,6 +71,7 @@ class MainView():
         self.file_menu.add_command(label="Load from Pickle file", command=self.load_data_from_pickle)
 
         self.molecule_menu.add_command(label="Molecule Inspector", command=self.open_molecule_inspector)
+        self.molecule_menu.add_command(label="Molecule Network Viewer", command=self.open_molecule_network_viewer)
 
         self.root_frame = ttk.Frame(self.root)
         self.root_frame.pack(fill=tk.BOTH, expand=tk.TRUE)
@@ -181,6 +183,9 @@ class MainView():
 
     def open_molecule_inspector(self):
         a = Molecule_Inspector(self.root,"Molecule Inspector",self.data.full_data)
+
+    def open_molecule_network_viewer(self):
+        a = Molecule_Network_Viewer(self.root,"Molecule Network Viewer",self.data.full_data)
 
     def view_network(self,cond):
         #create graph
