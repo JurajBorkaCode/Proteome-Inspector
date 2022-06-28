@@ -13,6 +13,7 @@ import pandas as pd
 import pickle
 import networkx as nx
 import webbrowser
+import copy
 
 from pathlib import Path
 
@@ -21,6 +22,8 @@ from compound import Compound
 from Network_Viewer import Network_Viewer
 from Molecule_Inspector import Molecule_Inspector
 from Molecule_Network_Viewer import Molecule_Network_Viewer
+from Add_Protein_Dialog import Add_Protein_Dialog
+from Add_Reaction_Dialog import Add_Reaction_Dialog
 
 
 
@@ -69,9 +72,12 @@ class MainView():
 
         self.file_menu.add_command(label="Load from CSV file", command=self.load_data_from_csv)
         self.file_menu.add_command(label="Load from Pickle file", command=self.load_data_from_pickle)
+        self.file_menu.add_command(label="Manually add Protein", command=self.add_protein)
 
         self.molecule_menu.add_command(label="Molecule Inspector", command=self.open_molecule_inspector)
         self.molecule_menu.add_command(label="Molecule Network Viewer", command=self.open_molecule_network_viewer)
+        self.molecule_menu.add_command(label="Fix Molecules", command=self.fix_molecules)
+        self.molecule_menu.add_command(label="Edit Reaction", command=self.edit_reactions)
 
         self.root_frame = ttk.Frame(self.root)
         self.root_frame.pack(fill=tk.BOTH, expand=tk.TRUE)
@@ -179,13 +185,61 @@ class MainView():
 
         self.root.mainloop()
 
+    def edit_reactions(self):
+        a = Add_Reaction_Dialog(self.root,"Reaction Editor",self.data.full_data)
+        if a.submit:
+            self.data.full_data = a.data
 
+    def add_protein(self):
+        a = Add_Protein_Dialog(self.root,"Molecule Inspector")
+        if a.submit:
+            self.data.full_data[a.name.get()] = a.compound
+        self.load_proteins_tree()
+        self.load_lists()
 
     def open_molecule_inspector(self):
         a = Molecule_Inspector(self.root,"Molecule Inspector",self.data.full_data)
 
     def open_molecule_network_viewer(self):
         a = Molecule_Network_Viewer(self.root,"Molecule Network Viewer",self.data.full_data)
+
+    def fix_molecules(self):
+        new_data = copy.deepcopy(self.data.full_data)
+        for i in self.data.full_data:
+            for j in self.data.full_data[i].produces:
+                if j[:1].isdigit() and j[1] == " ":
+                    new_data[i].produces.remove(j)
+                    j = j[2:]
+                    new_data[i].produces.append(j)
+
+                new_data[i].produces.remove(j)
+                j = j.replace("(out)","")
+                j = j.replace("(in)","")
+                j = j.replace("a ","")
+                j = j.replace("an ","")
+                new_data[i].produces.append(j)
+
+
+            for j in self.data.full_data[i].consumes:
+                if j[:1].isdigit() and j[1] == " ":
+                    new_data[i].consumes.remove(j)
+                    j = j[2:]
+                    new_data[i].consumes.append(j)
+
+                new_data[i].consumes.remove(j)
+                j = j.replace("(out)","")
+                j = j.replace("(in)","")
+                j = j.replace("a ","")
+                j = j.replace("an ","")
+                new_data[i].consumes.append(j)
+
+
+
+        self.data.full_data = new_data
+
+        with open('fixed_molecules.pickle', 'wb') as handle:
+            pickle.dump(self.data.full_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
     def view_network(self,cond):
         #create graph
@@ -276,17 +330,23 @@ class MainView():
                 data = pd.read_csv(filepath)
                 data = data.rename(columns={"﻿Molecule Name":"﻿Molecule Name","∆LFQ":"∆LFQ","Std. Dev.":"Std. Dev.","P-Value":"P-Value","Molecule Type":"Molecule_Type"})
                 data = data.drop(data[data.Molecule_Type == "METABOLITE"].index)
+                data = data.drop(data[data.Molecule_Type == "LIPID"].index)
 
-
+                counter = 1
                 for index, row in data.iterrows():
                     name = (row['Molecule Name'].split(' '))[0]
                     try:
                         protein_data = self.get_protein_data(name)
-                        self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(name).strip() + "/entry",protein_data[4],protein_data[5])
-                        print("| " + name + " added")
+                        try:
+                            self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(name,'559292').strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
+                        except:
+                            self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(name,'284812').strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
+                        print(str(counter) + "/" + str(len(data)))
+                        counter += 1
                     except:
                         self.excluded.append(name)
-                        print(name + " not found")
+                        print(str(counter) + "/" + str(len(data)))
+                        counter += 1
 
                 with open(filepath.replace('.csv','') + '.pickle', 'wb') as handle:
                     pickle.dump(self.data.full_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -302,7 +362,7 @@ class MainView():
 
 
 
-    def Get_protein_ID_from_genename(self,gene_name):
+    def Get_protein_ID_from_genename(self,gene_name,taxon):
         url = 'https://www.uniprot.org/uploadlists/'
 
         params = {
@@ -310,7 +370,7 @@ class MainView():
         'to': 'ACC',
         'format': 'tab',
         'query': gene_name,
-        'taxon': '559292'
+        'taxon': taxon
         }
 
 
@@ -318,15 +378,22 @@ class MainView():
         data = data.encode('utf-8')
         req = urllib.request.Request(url, data)
         with urllib.request.urlopen(req) as f:
-           response = f.read()
+            response = f.read()
 
         decoded = response.decode('utf-8')
         data = decoded[9:len(decoded)]
         a = data.split('	')
+
         return a[1]
 
     def get_protein_data(self,gene_name):
-        protein_ID = self.Get_protein_ID_from_genename(gene_name)
+        try:
+            protein_ID = self.Get_protein_ID_from_genename(gene_name,'559292')
+        except:
+            protein_ID = self.Get_protein_ID_from_genename(gene_name,'284812')
+
+
+
         name = ""
         locations = []
         MF = []
@@ -337,8 +404,16 @@ class MainView():
         url = "https://rest.uniprot.org/uniprotkb/" + protein_ID.strip() + ".txt"
         file = urllib.request.urlopen(url)
 
+        checkNext = 0
+        full_reaction_got = 0
+        full_reaction = ""
+        reaction = ""
+
+        #for line in file:
+            #print(line.decode("utf-8"))
 
         for line in file:
+
             decoded_line = line.decode("utf-8")
             if "DR   GO" in decoded_line:
                 if "C:" in decoded_line:
@@ -354,16 +429,50 @@ class MainView():
                 line_name = decoded_line.split('=')
                 name = (line_name[1].strip()).replace(';','')
             elif "Reaction=" in decoded_line:
-                line_process = decoded_line.replace('CC       Reaction=','').strip()
+                full_reaction = decoded_line.strip()
+                if ";" in decoded_line:
+                    full_reaction_got = 1
+                    checkNext = 0
+                else:
+                    checkNext = 1
+            elif checkNext == 1:
+                if "CC         " in decoded_line:
+                    full_reaction += decoded_line.strip().replace("CC         "," ")
+                    if ";" in decoded_line:
+                        full_reaction_got = 1
+                        checkNext = 0
+                    else:
+                        checkNext = 1
+                else:
+                    full_reaction_got = 1
+                    checkNext = 0
+
+            elif full_reaction_got == 1:
+                line_process = full_reaction.replace('CC       Reaction=','').strip()
                 split_semicolon = line_process.split(';')
-                split_eq = split_semicolon[0].split(' = ')
-                C = split_eq[0].split(' + ')
-                P = split_eq[1].split(' + ')
+                reaction = split_semicolon[0]
+                if " to " in line_process:
+                    full_reaction_got = 0
+                elif "=" in line_process:
 
-        return [name,locations,MF,BP,C,P]
+                    split_eq = split_semicolon[0].split(' = ')
+                    C = split_eq[0].split(' + ')
+                    P = split_eq[1].split(' + ')
+                    full_reaction_got = 0
+                else:
+
+                    full_reaction_got = 0
+
+        if type(P) == str:
+            P = [P]
+
+        if type(C) == str:
+            C = [C]
+
+        return [name,locations,MF,BP,C,P,reaction]
 
 
-    #Reaction=GTP + H2O = GDP + H(+) + phosphate; Xref=Rhea:RHEA:19669
+
 
     def load_data_from_pickle(self):
         try:

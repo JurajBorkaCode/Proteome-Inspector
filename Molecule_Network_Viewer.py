@@ -107,11 +107,12 @@ class Molecule_Network_Viewer(SuperClass):
         focus = {selected: {"color":"red"}}
         nx.set_node_attributes(net,focus)
 
-        vis_net = Network(notebook=True,height=1000,width=1000)
+        vis_net = Network(notebook=True,height=1000,width=1000,directed=True)
         vis_net.barnes_hut()
         vis_net.show_buttons(filter_=['physics'])
         vis_net.from_nx(net)
         vis_net.show(selected+".html")
+        webbrowser.open(selected+".html")
 
 
 

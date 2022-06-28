@@ -1,0 +1,131 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1000;
+            height: 1000;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"id": "ATP", "label": "ATP", "shape": "dot", "size": 10}, {"id": "ADP", "label": "ADP", "shape": "dot", "size": 10}, {"id": "H(+)", "label": "H(+)", "shape": "dot", "size": 10}, {"id": "oxaloacetate", "label": "oxaloacetate", "shape": "dot", "size": 10}, {"id": "phosphate", "label": "phosphate", "shape": "dot", "size": 10}, {"id": "hydrogencarbonate", "label": "hydrogencarbonate", "shape": "dot", "size": 10}, {"id": "pyruvate", "label": "pyruvate", "shape": "dot", "size": 10}, {"id": "4-nitrophenyl phosphate", "label": "4-nitrophenyl phosphate", "shape": "dot", "size": 10}, {"color": "red", "id": "H2O", "label": "H2O", "shape": "dot", "size": 10}, {"id": "4-nitrophenol", "label": "4-nitrophenol", "shape": "dot", "size": 10}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": "ATP", "label": 1, "title": "PYC2", "to": "ADP", "weight": 1}, {"arrows": "to", "from": "ATP", "label": 1, "title": "PYC2", "to": "H(+)", "weight": 1}, {"arrows": "to", "from": "ATP", "label": 1, "title": "PYC2", "to": "oxaloacetate", "weight": 1}, {"arrows": "to", "from": "ATP", "label": 1, "title": "PYC2", "to": "phosphate", "weight": 1}, {"arrows": "to", "from": "hydrogencarbonate", "label": 1, "title": "PYC2", "to": "ADP", "weight": 1}, {"arrows": "to", "from": "hydrogencarbonate", "label": 1, "title": "PYC2", "to": "H(+)", "weight": 1}, {"arrows": "to", "from": "hydrogencarbonate", "label": 1, "title": "PYC2", "to": "oxaloacetate", "weight": 1}, {"arrows": "to", "from": "hydrogencarbonate", "label": 1, "title": "PYC2", "to": "phosphate", "weight": 1}, {"arrows": "to", "from": "pyruvate", "label": 1, "title": "PYC2", "to": "ADP", "weight": 1}, {"arrows": "to", "from": "pyruvate", "label": 1, "title": "PYC2", "to": "H(+)", "weight": 1}, {"arrows": "to", "from": "pyruvate", "label": 1, "title": "PYC2", "to": "oxaloacetate", "weight": 1}, {"arrows": "to", "from": "pyruvate", "label": 1, "title": "PYC2", "to": "phosphate", "weight": 1}, {"arrows": "to", "from": "H(+)", "label": 1, "title": "PHO13", "to": "4-nitrophenyl phosphate", "weight": 1}, {"arrows": "to", "from": "H(+)", "label": 1, "title": "PHO13", "to": "H2O", "weight": 1}, {"arrows": "to", "from": "phosphate", "label": 1, "title": "PHO13", "to": "4-nitrophenyl phosphate", "weight": 1}, {"arrows": "to", "from": "phosphate", "label": 1, "title": "PHO13", "to": "H2O", "weight": 1}, {"arrows": "to", "from": "4-nitrophenyl phosphate", "label": 1, "title": "PHO13", "to": "4-nitrophenol", "weight": 1}, {"arrows": "to", "from": "H2O", "label": 1, "title": "PHO13", "to": "4-nitrophenol", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

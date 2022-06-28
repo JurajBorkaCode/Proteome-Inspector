@@ -20,8 +20,11 @@ class Molecule_Inspector(SuperClass):
         self.split_frame = ttk.Frame(frame,padding=5)
         self.split_frame.pack()
 
-        self.protein_info_frame = tk.Frame(self.split_frame)
-        self.protein_info_frame.pack(side=tk.LEFT)
+        self.vertical_split_frame = tk.Frame(self.split_frame)
+        self.vertical_split_frame.pack(side=tk.LEFT)
+
+        self.protein_info_frame = tk.Frame(self.vertical_split_frame)
+        self.protein_info_frame.pack()
 
         self.protein_info_scrollbar = ttk.Scrollbar(self.protein_info_frame)
         self.protein_info_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -29,7 +32,7 @@ class Molecule_Inspector(SuperClass):
         self.protein_tree_frame = tk.Frame(self.protein_info_frame)
         self.protein_tree_frame.pack(side=tk.LEFT)
 
-        self.protein_tree = ttk.Treeview(self.protein_tree_frame, yscrollcommand=self.protein_info_scrollbar.set, height=36)
+        self.protein_tree = ttk.Treeview(self.protein_tree_frame, yscrollcommand=self.protein_info_scrollbar.set, height=30)
         self.protein_tree['columns'] = ('Name', 'Full Name', 'Abundance', 'P-Value')
         self.protein_tree.pack()
 
@@ -45,7 +48,21 @@ class Molecule_Inspector(SuperClass):
         self.protein_tree.heading('Abundance', text='Abundance')
         self.protein_tree.heading('P-Value', text='P-Value')
 
+        self.protein_tree.bind('<<TreeviewSelect>>',lambda event: self.update_reaction())
+
         self.protein_info_scrollbar.config(command = self.protein_tree.yview)
+
+        self.protein_reaction_frame = tk.Frame(self.vertical_split_frame)
+        self.protein_reaction_frame.pack()
+
+        self.reaction_scroll = ttk.Scrollbar(self.protein_reaction_frame)
+        self.reaction_scroll.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.protein_reaction_text = tk.Text(self.protein_reaction_frame,width=94,height=7, wrap=tk.WORD)
+        self.protein_reaction_text.pack(expand=True, side=tk.LEFT)
+
+        self.protein_reaction_text.config(yscrollcommand=self.reaction_scroll.set, state="disabled")
+        self.reaction_scroll.config(command=self.protein_reaction_text.yview)
 
         self.query_frame = tk.Frame(self.split_frame)
         self.query_frame.pack(side=tk.LEFT)
@@ -83,6 +100,13 @@ class Molecule_Inspector(SuperClass):
 
 
 
+    def update_reaction(self):
+        selected = self.protein_tree.item(self.protein_tree.focus())["values"][0]
+        self.protein_reaction_text.config(state="normal")
+        self.protein_reaction_text.delete("1.0","end-1c")
+        self.protein_reaction_text.insert(tk.END, self.data[selected].reaction)
+        self.protein_reaction_text.config(state="disabled")
+
     def update_selected(self):
         try:
             self.protein_tree.delete(*self.protein_tree.get_children())
@@ -98,6 +122,9 @@ class Molecule_Inspector(SuperClass):
 
             self.protein_tree.tag_configure('consumes', foreground="red")
             self.protein_tree.tag_configure('produces', foreground="green")
+            self.protein_reaction_text.config(state="normal")
+            self.protein_reaction_text.delete("1.0","end-1c")
+            self.protein_reaction_text.config(state="disabled")
         except:
             pass
 

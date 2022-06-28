@@ -1,5 +1,5 @@
 class Compound:
-    def __init__(self,Name,Recomended_Name,p_value,Cellular_Component,Molecular_Function,Biological_Process,Abundance,web,consume,produce):
+    def __init__(self,Name,Recomended_Name,p_value,Cellular_Component,Molecular_Function,Biological_Process,Abundance,web,consume,produce,reaction):
         self.name = Name
         self.recomended_name = Recomended_Name
         self.p_value = p_value
@@ -10,6 +10,7 @@ class Compound:
         self.consumes = consume
         self.produces = produce
         self.web = web
+        self.reaction = reaction
 
     def info(self):
         print("| " + self.name)
