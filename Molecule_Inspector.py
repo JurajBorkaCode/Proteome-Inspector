@@ -3,6 +3,8 @@ import tkinter.ttk as ttk
 import webbrowser
 from collections import OrderedDict
 import webbrowser
+import pandas as pd
+import os
 
 from SuperClass import SuperClass
 
@@ -119,9 +121,13 @@ class Molecule_Inspector(SuperClass):
                 elif selected in self.data[i].produces:
                     self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="produces")
                     counter +=1
+                elif (selected not in self.data[i].produces) and (selected not in self.data[i].consumes) and (" " + selected + " " in self.data[i].reaction):
+                    self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="N_A")
+                    counter +=1
 
             self.protein_tree.tag_configure('consumes', foreground="red")
             self.protein_tree.tag_configure('produces', foreground="green")
+            self.protein_tree.tag_configure('N_A', foreground="black")
             self.protein_reaction_text.config(state="normal")
             self.protein_reaction_text.delete("1.0","end-1c")
             self.protein_reaction_text.config(state="disabled")
@@ -134,10 +140,29 @@ class Molecule_Inspector(SuperClass):
 
 
     def buttonbox(self):
-        self.btn_cancel = ttk.Button(self, text='Cancel', width=10, command=self.cancel)
-        self.btn_cancel.pack(side="right", padx=(5,10), pady=(5,10))
-        self.btn_back = ttk.Button(self, text='Protein Info', width=15, command=self.protein_info)
-        self.btn_back.pack(side="right", padx=(5,10), pady=(5,10))
+        self.cancel_btn = ttk.Button(self, text='Cancel', width=10, command=self.cancel)
+        self.cancel_btn.pack(side="right", padx=(5,10), pady=(5,10))
+        self.back_btn = ttk.Button(self, text='Protein Info', width=15, command=self.protein_info)
+        self.back_btn.pack(side="right", padx=(5,10), pady=(5,10))
+        self.extract_btn = ttk.Button(self, text='Extract', width=15, command=self.extract_data_to_csv)
+        self.extract_btn.pack(side="right", padx=(5,10), pady=(5,10))
+
+
+    def extract_data_to_csv(self):
+        print(1)
+        out_data = {"Protein ID" : [],"Protein Name" : [],"Abundance" : [],"P-Value" : [],"status" : []}
+        for line in self.protein_tree.get_children():
+            out_data["Protein ID"].append(self.protein_tree.item(line)['values'][0])
+            out_data["Protein Name"].append(self.protein_tree.item(line)['values'][1])
+            out_data["Abundance"].append(self.protein_tree.item(line)['values'][2])
+            out_data["P-Value"].append(self.protein_tree.item(line)['values'][3])
+            out_data["status"].append(self.protein_tree.item(line)['tags'][0])
+
+        out_df = pd.DataFrame(data=out_data)
+
+        out_df.to_csv("out.csv", index=False)
+        os.system("start EXCEL.EXE out.csv")
+
 
 
     def protein_info(self):
