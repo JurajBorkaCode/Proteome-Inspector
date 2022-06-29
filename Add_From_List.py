@@ -21,8 +21,8 @@ from Data import Data
 from compound import Compound
 from SuperClass import SuperClass
 
-class Add_Protein_Dialog(SuperClass):
-    def __init__(self,parent,title):
+class Add_From_List(SuperClass):
+    def __init__(self,parent,title,data,file):
         self.web = tk.StringVar()
         self.web.set("Webpage")
         self.submit = False
@@ -34,10 +34,44 @@ class Add_Protein_Dialog(SuperClass):
         self.P_value.set("P-Value")
         self.abundance = tk.StringVar()
         self.abundance.set("Abundance")
+        self.missing_data = []
+        self.data = data
+        self.file = file
+        with open(file.replace("pickle","txt").replace("csv","txt")) as f:
+            lines = f.readlines()
+            for line in lines:
+                if line.strip() not in self.data.keys():
+                    self.missing_data.append(line.strip())
 
-        super().__init__(parent, title, width = 200, height = 150, take_focus=True, extendable=False)
+
+
+        super().__init__(parent, title, width = 200, height = 170, take_focus=True, extendable=False)
+
+    def update_data(self,var,index,mode):
+        try:
+            #FORMAT CSV
+            data = pd.read_csv(self.file.replace("pickle","csv"))
+            data = data.rename(columns={"﻿Molecule Name":"﻿Molecule Name","∆LFQ":"∆LFQ","Std. Dev.":"Std. Dev.","P-Value":"P-Value","Molecule Type":"Molecule_Type"})
+            data = data.drop(data[data.Molecule_Type == "METABOLITE"].index)
+            data = data.drop(data[data.Molecule_Type == "LIPID"].index)
+
+            gene_name = self.clicked.get()
+            for index, row in data.iterrows():
+                name = row['Molecule Name'].split(' ')[0]
+                if name == gene_name:
+                    self.name.set(name)
+                    self.abundance.set(row['∆LFQ'])
+                    self.P_value.set(row['P-Value'])
+        except:
+            pass
 
     def body(self, frame):
+
+        self.clicked = tk.StringVar()
+        self.clicked.trace_add("write", self.update_data)
+        self.selection = tk.OptionMenu(frame,self.clicked,*self.missing_data)
+        self.selection.pack(side=tk.TOP)
+
         self.name_e = ttk.Entry(frame, font=("Calibri 12"), textvariable = self.name, width=100)
         self.name_e.pack(side=tk.TOP)
         self.p_val = ttk.Entry(frame, font=("Calibri 12"), textvariable = self.P_value, width=100)

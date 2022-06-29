@@ -28,3 +28,14 @@ class Compound:
 
         print("| Abundance - " + str(self.abundance))
         print("| " + self.web)
+
+
+
+
+
+
+
+
+
+
+        #

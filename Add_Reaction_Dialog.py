@@ -213,10 +213,17 @@ class Add_Reaction_Dialog(SuperClass):
         for i in self.data:
             if search in self.data[i].name.upper():
                 text_to_add = i.replace(' ', '\ ')
-                self.molecule_tree.insert(parent='', index=counter, values=(text_to_add))
+                if self.data[i].reaction == "":
+                    self.molecule_tree.insert(parent='', index=counter, values=(text_to_add), tags="no_reactions")
+                elif (self.data[i].reaction != "") and (self.data[i].consumes == []) and (self.data[i].produces == []):
+                    self.molecule_tree.insert(parent='', index=counter, values=(text_to_add), tags="has_reactions_but_no_molecules")
+                else:
+                    self.molecule_tree.insert(parent='', index=counter, values=(text_to_add), tags="has_reactions")
                 counter += 1
 
-
+        self.molecule_tree.tag_configure('no_reactions', foreground="black")
+        self.molecule_tree.tag_configure('has_reactions_but_no_molecules', foreground="red")
+        self.molecule_tree.tag_configure('has_reactions', foreground="green")
 
 
 

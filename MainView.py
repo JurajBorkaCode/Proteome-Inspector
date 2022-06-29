@@ -14,8 +14,11 @@ import pickle
 import networkx as nx
 import webbrowser
 import copy
+import requests
+import mygene
 
 from pathlib import Path
+from bs4 import BeautifulSoup
 
 from Data import Data
 from compound import Compound
@@ -24,6 +27,7 @@ from Molecule_Inspector import Molecule_Inspector
 from Molecule_Network_Viewer import Molecule_Network_Viewer
 from Add_Protein_Dialog import Add_Protein_Dialog
 from Add_Reaction_Dialog import Add_Reaction_Dialog
+from Add_From_List import Add_From_List
 
 
 
@@ -31,6 +35,7 @@ class MainView():
     def __init__(self):
         self.data = Data()
         self.excluded = []
+        self.file_name = ""
 
         self.Cellular_Component_list = []
         self.Molecular_Function_list = []
@@ -72,7 +77,9 @@ class MainView():
 
         self.file_menu.add_command(label="Load from CSV file", command=self.load_data_from_csv)
         self.file_menu.add_command(label="Load from Pickle file", command=self.load_data_from_pickle)
+        self.file_menu.add_command(label="Save to Pickle file", command=self.save)
         self.file_menu.add_command(label="Manually add Protein", command=self.add_protein)
+        self.file_menu.add_command(label="Batch add Protein", command=self.batch_add_protein)
 
         self.molecule_menu.add_command(label="Molecule Inspector", command=self.open_molecule_inspector)
         self.molecule_menu.add_command(label="Molecule Network Viewer", command=self.open_molecule_network_viewer)
@@ -185,6 +192,16 @@ class MainView():
 
         self.root.mainloop()
 
+    def save(self):
+        if ".pickle" in self.file_name:
+            with open(self.file_name, 'wb') as handle:
+                pickle.dump(self.data.full_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        else:
+            with open(self.file_name.replace(".csv",".pickle"), 'wb') as handle:
+                pickle.dump(self.data.full_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+
     def edit_reactions(self):
         a = Add_Reaction_Dialog(self.root,"Reaction Editor",self.data.full_data)
         if a.submit:
@@ -192,6 +209,13 @@ class MainView():
 
     def add_protein(self):
         a = Add_Protein_Dialog(self.root,"Molecule Inspector")
+        if a.submit:
+            self.data.full_data[a.name.get()] = a.compound
+        self.load_proteins_tree()
+        self.load_lists()
+
+    def batch_add_protein(self):
+        a = Add_From_List(self.root,"Batch Add",self.data.full_data,self.file_name)
         if a.submit:
             self.data.full_data[a.name.get()] = a.compound
         self.load_proteins_tree()
@@ -325,6 +349,7 @@ class MainView():
     def load_data_from_csv(self):
         try:
             filepath = fd.askopenfilename()
+            self.file_name = filepath
             if filepath:
                 #FORMAT CSV
                 data = pd.read_csv(filepath)
@@ -335,18 +360,33 @@ class MainView():
                 counter = 1
                 for index, row in data.iterrows():
                     name = (row['Molecule Name'].split(' '))[0]
-                    try:
-                        protein_data = self.get_protein_data(name)
+                    gene_name = (row['Molecule Name'].split(' '))[1].replace("(","").replace(")","")
+                    if ";" in gene_name:
+                        genes = gene_name.split(";")
+                        gene_names = name.split(";")
+                        for g in range(len(genes)):
+                            try:
+                                protein_data = self.get_protein_data(genes[g])
+                                self.data.full_data[gene_names[g]] = Compound(gene_names[g],protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(genes[g]).strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
+                                print(str(counter) + "/" + str(len(data)))
+                                counter += 1
+                            except:
+                                self.excluded.append(gene_names[g])
+                                print(str(counter) + "/" + str(len(data)))
+                                counter += 1
+
+
+
+                    else:
                         try:
-                            self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(name,'559292').strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
+                            protein_data = self.get_protein_data(gene_name)
+                            self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(gene_name).strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
+                            print(str(counter) + "/" + str(len(data)))
+                            counter += 1
                         except:
-                            self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(name,'284812').strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
-                        print(str(counter) + "/" + str(len(data)))
-                        counter += 1
-                    except:
-                        self.excluded.append(name)
-                        print(str(counter) + "/" + str(len(data)))
-                        counter += 1
+                            self.excluded.append(name)
+                            print(str(counter) + "/" + str(len(data)))
+                            counter += 1
 
                 with open(filepath.replace('.csv','') + '.pickle', 'wb') as handle:
                     pickle.dump(self.data.full_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -362,35 +402,12 @@ class MainView():
 
 
 
-    def Get_protein_ID_from_genename(self,gene_name,taxon):
-        url = 'https://www.uniprot.org/uploadlists/'
-
-        params = {
-        'from': 'GENENAME',
-        'to': 'ACC',
-        'format': 'tab',
-        'query': gene_name,
-        'taxon': taxon
-        }
-
-
-        data = urllib.parse.urlencode(params)
-        data = data.encode('utf-8')
-        req = urllib.request.Request(url, data)
-        with urllib.request.urlopen(req) as f:
-            response = f.read()
-
-        decoded = response.decode('utf-8')
-        data = decoded[9:len(decoded)]
-        a = data.split('	')
-
-        return a[1]
+    def Get_protein_ID_from_genename(self,gene_name):
+        mg = mygene.MyGeneInfo()
+        return mg.getgene(gene_name)['uniprot']['Swiss-Prot']
 
     def get_protein_data(self,gene_name):
-        try:
-            protein_ID = self.Get_protein_ID_from_genename(gene_name,'559292')
-        except:
-            protein_ID = self.Get_protein_ID_from_genename(gene_name,'284812')
+        protein_ID = self.Get_protein_ID_from_genename(gene_name)
 
 
 
@@ -477,6 +494,7 @@ class MainView():
     def load_data_from_pickle(self):
         try:
             filepath = fd.askopenfilename()
+            self.file_name = filepath
             if filepath:
                 with open(filepath, 'rb') as handle:
                     self.data.full_data = pickle.load(handle)
