@@ -29,9 +29,12 @@ class Compound:
         print("| Abundance - " + str(self.abundance))
         print("| " + self.web)
 
+    def get_reactions(self):
+        out = ""
+        for i in self.reaction:
+            out += i + "\n\n"
 
-
-
+        return out
 
 
 

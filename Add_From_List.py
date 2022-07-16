@@ -62,6 +62,8 @@ class Add_From_List(SuperClass):
                     self.name.set(name)
                     self.abundance.set(row['∆LFQ'])
                     self.P_value.set(row['P-Value'])
+                else:
+                    self.name.set(self.clicked.get())
         except:
             pass
 

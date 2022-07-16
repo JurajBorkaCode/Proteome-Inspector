@@ -67,9 +67,11 @@ class MainView():
         self.file_menu = tk.Menu(self.menu_bar,tearoff=False)
         self.network_menu = tk.Menu(self.menu_bar,tearoff=False)
         self.molecule_menu = tk.Menu(self.menu_bar,tearoff=False)
+        self.sort_menu = tk.Menu(self.menu_bar,tearoff=False)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
         self.menu_bar.add_cascade(label="Network", menu=self.network_menu)
         self.menu_bar.add_cascade(label="Molecules", menu=self.molecule_menu)
+        self.menu_bar.add_cascade(label="Sort", menu=self.sort_menu)
 
         self.network_menu.add_command(label="Cellular Component", command=lambda: self.view_network("Cellular Component"))
         self.network_menu.add_command(label="Molecular Function", command=lambda: self.view_network("Molecular Function"))
@@ -80,11 +82,18 @@ class MainView():
         self.file_menu.add_command(label="Save to Pickle file", command=self.save)
         self.file_menu.add_command(label="Manually add Protein", command=self.add_protein)
         self.file_menu.add_command(label="Batch add Protein", command=self.batch_add_protein)
+        self.file_menu.add_command(label="Reload Data", command=self.reload_data)
 
         self.molecule_menu.add_command(label="Molecule Inspector", command=self.open_molecule_inspector)
         self.molecule_menu.add_command(label="Molecule Network Viewer", command=self.open_molecule_network_viewer)
         self.molecule_menu.add_command(label="Fix Molecules", command=self.fix_molecules)
         self.molecule_menu.add_command(label="Edit Reaction", command=self.edit_reactions)
+
+        self.sort_menu.add_command(label="P-Value Ascending", command=self.sort_p_value_asc)
+        self.sort_menu.add_command(label="P-Value Descending", command=self.sort_p_value_dec)
+        self.sort_menu.add_command(label="Abundance Ascending", command=self.sort_abundance_asc)
+        self.sort_menu.add_command(label="Abundance Descending", command=self.sort_abundance_dec)
+
 
         self.root_frame = ttk.Frame(self.root)
         self.root_frame.pack(fill=tk.BOTH, expand=tk.TRUE)
@@ -192,6 +201,27 @@ class MainView():
 
         self.root.mainloop()
 
+
+    def sort_p_value_asc(self):
+        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: -float(item[1].p_value)))
+        self.load_proteins_tree()
+        self.load_lists()
+
+    def sort_p_value_dec(self):
+        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: float(item[1].p_value)))
+        self.load_proteins_tree()
+        self.load_lists()
+
+    def sort_abundance_asc(self):
+        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: -float(item[1].abundance)))
+        self.load_proteins_tree()
+        self.load_lists()
+
+    def sort_abundance_dec(self):
+        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: float(item[1].abundance)))
+        self.load_proteins_tree()
+        self.load_lists()
+
     def save(self):
         if ".pickle" in self.file_name:
             with open(self.file_name, 'wb') as handle:
@@ -225,7 +255,7 @@ class MainView():
         a = Molecule_Inspector(self.root,"Molecule Inspector",self.data.full_data)
 
     def open_molecule_network_viewer(self):
-        a = Molecule_Network_Viewer(self.root,"Molecule Network Viewer",self.data.full_data)
+        a = Molecule_Network_Viewer(self.root,"Molecule Network Viewer",self.data.full_data,self.proteins_tree.item(self.proteins_tree.focus())["values"][0])
 
     def fix_molecules(self):
         new_data = copy.deepcopy(self.data.full_data)
@@ -401,6 +431,106 @@ class MainView():
         self.load_lists()
 
 
+    def reload_data(self):
+        new_data = {}
+        counter = 0
+        size = str(len(self.data.full_data))
+        for i in self.data.full_data:
+            try:
+                protein_data = self.get_protein_data_from_url(self.data.full_data[i].web.replace("/entry",".txt"))
+                new_data[self.data.full_data[i].name] = Compound(self.data.full_data[i].name,protein_data[0],self.data.full_data[i].p_value,protein_data[1],protein_data[2],protein_data[3],self.data.full_data[i].abundance,self.data.full_data[i].web,protein_data[4],protein_data[5],protein_data[6])
+                print(str(counter) + "/" + size)
+                counter += 1
+            except:
+                pass
+
+        self.data.full_data = new_data
+        print(len(self.data.full_data))
+
+        self.load_proteins_tree()
+        self.load_lists()
+
+
+    def get_protein_data_from_url(self,url):
+        url = url.replace("www","beta")
+        name = ""
+        locations = []
+        MF = []
+        BP = []
+        C = []
+        P = []
+
+        file = urllib.request.urlopen(url)
+
+        checkNext = 0
+        full_reaction_got = 0
+        full_reaction = ""
+        reaction = []
+
+        for line in file:
+            decoded_line = line.decode("utf-8")
+            if "DR   GO" in decoded_line:
+                if "C:" in decoded_line:
+                    line_info = decoded_line.split('; ')
+                    locations.append(line_info[2].replace('C:',''))
+                elif "F:" in decoded_line:
+                    line_info = decoded_line.split('; ')
+                    MF.append(line_info[2].replace('F:',''))
+                elif "P:" in decoded_line:
+                    line_info = decoded_line.split('; ')
+                    BP.append(line_info[2].replace('P:',''))
+            elif "DE   RecName" in decoded_line:
+                line_name = decoded_line.split('=')
+                name = (line_name[1].strip()).replace(';','')
+            elif "Reaction=" in decoded_line:
+                full_reaction = decoded_line.strip()
+                if ";" in decoded_line:
+                    full_reaction_got = 1
+                    checkNext = 0
+                else:
+                    checkNext = 1
+            elif checkNext == 1:
+                if "CC         " in decoded_line:
+                    full_reaction += decoded_line.strip().replace("CC         "," ")
+                    if ";" in decoded_line:
+                        full_reaction_got = 1
+                        checkNext = 0
+                    else:
+                        checkNext = 1
+                else:
+                    full_reaction_got = 1
+                    checkNext = 0
+
+            elif full_reaction_got == 1:
+                line_process = full_reaction.replace('CC       Reaction=','').strip()
+                split_semicolon = line_process.split(';')
+                reaction.append(split_semicolon[0])
+                full_reaction = ""
+                if " to " in split_semicolon[0]:
+                    full_reaction_got = 0
+                elif " = " in split_semicolon[0]:
+                    split_eq = split_semicolon[0].split(' = ')
+                    C = split_eq[0].split(' + ')
+                    P = split_eq[1].split(' + ')
+                    full_reaction_got = 0
+                else:
+                    full_reaction_got = 0
+
+        if type(P) == str:
+            P = [P]
+
+        if type(C) == str:
+            C = [C]
+
+
+        C = list(dict.fromkeys(C))
+        P = list(dict.fromkeys(P))
+
+
+        return [name,locations,MF,BP,C,P,reaction]
+
+
+
 
     def Get_protein_ID_from_genename(self,gene_name):
         mg = mygene.MyGeneInfo()
@@ -424,7 +554,7 @@ class MainView():
         checkNext = 0
         full_reaction_got = 0
         full_reaction = ""
-        reaction = ""
+        reaction = []
 
         #for line in file:
             #print(line.decode("utf-8"))
@@ -467,10 +597,11 @@ class MainView():
             elif full_reaction_got == 1:
                 line_process = full_reaction.replace('CC       Reaction=','').strip()
                 split_semicolon = line_process.split(';')
-                reaction = split_semicolon[0]
-                if " to " in line_process:
+                reaction.append(split_semicolon[0])
+                full_reaction = ""
+                if " to " in split_semicolon[0]:
                     full_reaction_got = 0
-                elif "=" in line_process:
+                elif " = " in split_semicolon[0]:
 
                     split_eq = split_semicolon[0].split(' = ')
                     C = split_eq[0].split(' + ')
@@ -485,6 +616,9 @@ class MainView():
 
         if type(C) == str:
             C = [C]
+
+        C = list(dict.fromkeys(C))
+        P = list(dict.fromkeys(P))
 
         return [name,locations,MF,BP,C,P,reaction]
 

@@ -12,10 +12,11 @@ from pyvis.network import Network
 from SuperClass import SuperClass
 
 class Molecule_Network_Viewer(SuperClass):
-    def __init__(self,parent,title,data):
+    def __init__(self,parent,title,data,focus):
         self.data = data
         self.molecule_list = []
         self.G = nx.Graph()
+        self.protein_focus = focus
 
         self.submit = False
 
@@ -45,6 +46,7 @@ class Molecule_Network_Viewer(SuperClass):
 
         self.query_frame = ttk.Frame(self.split_frame,padding=5)
         self.query_frame.pack(side=tk.LEFT)
+
 
         self.search = tk.StringVar()
         self.search.trace_add("write", self.search_molecule_tree)
@@ -87,8 +89,10 @@ class Molecule_Network_Viewer(SuperClass):
         for i in self.data:
             for j in self.data[i].consumes:
                 for x in self.data[i].produces:
-                    self.G.add_edge(j,x,title=self.data[i].name)
-
+                    if self.protein_focus == self.data[i].name:
+                        self.G.add_edge(j,x,title=self.data[i].name,width=5)
+                    else:
+                        self.G.add_edge(j,x,title=self.data[i].name,width=1)
 
 
     def update_selected(self):

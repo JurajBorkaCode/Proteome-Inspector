@@ -7,6 +7,7 @@ import pandas as pd
 import os
 
 from SuperClass import SuperClass
+from Add_Filter_Dialog import Add_Filter_Dialog
 
 class Molecule_Inspector(SuperClass):
     def __init__(self,parent,title,data):
@@ -14,6 +15,7 @@ class Molecule_Inspector(SuperClass):
         self.molecule_list = []
 
         self.submit = False
+        self.filters = {"Cellular Component":[],"Molecular Function":[],"Biological Process":[]}
 
         super().__init__(parent, title, width = 970, height = 800, take_focus=True, extendable=False)
 
@@ -106,8 +108,40 @@ class Molecule_Inspector(SuperClass):
         selected = self.protein_tree.item(self.protein_tree.focus())["values"][0]
         self.protein_reaction_text.config(state="normal")
         self.protein_reaction_text.delete("1.0","end-1c")
-        self.protein_reaction_text.insert(tk.END, self.data[selected].reaction)
+        self.protein_reaction_text.insert(tk.END, self.data[selected].get_reactions())
         self.protein_reaction_text.config(state="disabled")
+
+
+    def check_filters(self,protein):
+        filter_out = True
+        if self.filters == {'Cellular Component': [], 'Molecular Function': [], 'Biological Process': []}:
+            filter_out = False
+
+        if self.filters["Cellular Component"] != []:
+            for x in self.data[protein].cellular_component:
+                if self.filters["Cellular Component"][0].upper() in x.upper():
+                    filter_out = False
+
+        if self.filters["Molecular Function"] != []:
+            for x in self.data[protein].molecular_function:
+                if self.filters["Molecular Function"][0] in x:
+                    filter_out = False
+
+
+        if self.filters["Biological Process"] != []:
+            for x in self.data[protein].biological_process:
+                if self.filters["Biological_Process"][0] in x:
+                    filter_out = False
+
+        if filter_out:
+            return 2
+        else:
+            return 1
+
+
+
+
+
 
     def update_selected(self):
         try:
@@ -115,13 +149,14 @@ class Molecule_Inspector(SuperClass):
             selected = self.molecule_tree.item(self.molecule_tree.focus())['values'][0]
             counter = 0
             for i in self.data:
-                if selected in self.data[i].consumes:
+                check = self.check_filters(self.data[i].name)
+                if selected in self.data[i].consumes and check == 1:
                     self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="consumes")
                     counter +=1
-                elif selected in self.data[i].produces:
+                elif selected in self.data[i].produces and check == 1:
                     self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="produces")
                     counter +=1
-                elif (selected not in self.data[i].produces) and (selected not in self.data[i].consumes) and (" " + selected + " " in self.data[i].reaction):
+                elif (selected not in self.data[i].produces) and check == 1 and (selected not in self.data[i].consumes) and (" " + selected + " " in self.data[i].reaction):
                     self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="N_A")
                     counter +=1
 
@@ -146,7 +181,10 @@ class Molecule_Inspector(SuperClass):
         self.back_btn.pack(side="right", padx=(5,10), pady=(5,10))
         self.extract_btn = ttk.Button(self, text='Extract', width=15, command=self.extract_data_to_csv)
         self.extract_btn.pack(side="right", padx=(5,10), pady=(5,10))
-
+        self.remove_filter_btn = ttk.Button(self, text='Remove Filter', width=20, command=self.remove_filter)
+        self.remove_filter_btn.pack(side="right", padx=(5,10), pady=(5,10))
+        self.add_filter_btn = ttk.Button(self, text='Add Filter', width=20, command=self.add_filter)
+        self.add_filter_btn.pack(side="right", padx=(5,10), pady=(5,10))
 
     def extract_data_to_csv(self):
         print(1)
@@ -193,6 +231,27 @@ class Molecule_Inspector(SuperClass):
                 text_to_add = i.replace(' ', '\ ')
                 self.molecule_tree.insert(parent='', index=counter, values=(text_to_add))
                 counter += 1
+
+
+
+    def add_filter(self):
+        a = Add_Filter_Dialog(self,"Add Filter",self.data)
+        if a.submit == True:
+            self.filters = a.filters
+            print(self.filters)
+
+
+
+
+    def remove_filter(self):
+        pass
+
+
+
+
+
+
+
 
 
 
