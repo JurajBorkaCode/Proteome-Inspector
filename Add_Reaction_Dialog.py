@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import copy
 from pyvis.network import Network
+import pyperclip
 
 from SuperClass import SuperClass
 
@@ -40,14 +41,14 @@ class Add_Reaction_Dialog(SuperClass):
         self.consumes_frame.pack(side=tk.LEFT)
 
         self.consumes_tree = ttk.Treeview(self.consumes_frame, height=10)
-        self.consumes_tree['columns'] = ('Consumes')
+        self.consumes_tree['columns'] = ('Produces')
         self.consumes_tree.pack()
 
         self.consumes_tree.column('#0',width=0,stretch='NO')
-        self.consumes_tree.column('Consumes',width=180)
+        self.consumes_tree.column('Produces',width=180)
 
         self.consumes_tree.heading('#0', text='')
-        self.consumes_tree.heading('Consumes', text='Consumes')
+        self.consumes_tree.heading('Produces', text='Produces')
 
         self.consumes_txt = tk.StringVar()
         self.consumes_entry = ttk.Entry(self.consumes_frame, font=("Calibri 12"), textvariable = self.consumes_txt, width=10)
@@ -67,14 +68,14 @@ class Add_Reaction_Dialog(SuperClass):
         self.produces_frame.pack(side=tk.RIGHT)
 
         self.produces_tree = ttk.Treeview(self.produces_frame, height=10)
-        self.produces_tree['columns'] = ('Produces')
+        self.produces_tree['columns'] = ('Consumes')
         self.produces_tree.pack()
 
         self.produces_tree.column('#0',width=0,stretch='NO')
-        self.produces_tree.column('Produces',width=180)
+        self.produces_tree.column('Consumes',width=180)
 
         self.produces_tree.heading('#0', text='')
-        self.produces_tree.heading('Produces', text='Produces')
+        self.produces_tree.heading('Consumes', text='Consumes')
 
         self.produces_txt = tk.StringVar()
         self.produces_entry = ttk.Entry(self.produces_frame, font=("Calibri 12"), textvariable = self.produces_txt, width=10)
@@ -181,6 +182,14 @@ class Add_Reaction_Dialog(SuperClass):
         self.btn_cancel.pack(side="right", padx=(5,10), pady=(5,10))
         self.btn_back = ttk.Button(self, text='Updata data', width=15, command=self.update_data)
         self.btn_back.pack(side="right", padx=(5,10), pady=(5,10))
+        self.btn_get_data = ttk.Button(self, text='Copy A/P', width=15, command=self.copy_data)
+        self.btn_get_data.pack(side="right", padx=(5,10), pady=(5,10))
+
+
+    def copy_data(self):
+        selected = self.molecule_tree.item(self.molecule_tree.focus())["values"][0]
+        out_text = str(self.data[selected].abundance) + " " +  str(self.data[selected].p_value)
+        pyperclip.copy(out_text)
 
 
     def update_data(self):

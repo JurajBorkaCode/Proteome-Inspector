@@ -41,7 +41,7 @@ class MainView():
         self.Molecular_Function_list = []
         self.Biological_Process_list = []
 
-        self.set_width = 1130
+        self.set_width = 1250
         self.set_height = 850
 
         self.root = tk.Tk()
@@ -77,15 +77,21 @@ class MainView():
         self.network_menu.add_command(label="Molecular Function", command=lambda: self.view_network("Molecular Function"))
         self.network_menu.add_command(label="Biological Process", command=lambda: self.view_network("Biological Process"))
 
-        self.file_menu.add_command(label="Load from CSV file", command=self.load_data_from_csv)
+        self.file_menu.add_command(label="Load from CSV file [Gene (Protein)]", command=self.load_data_from_csv)
+        self.file_menu.add_command(label="Load from CSV file [Protein_Strain]", command=self.load_data_from_csv2)
         self.file_menu.add_command(label="Load from Pickle file", command=self.load_data_from_pickle)
+        self.file_menu.add_separator()
         self.file_menu.add_command(label="Save to Pickle file", command=self.save)
+        self.file_menu.add_separator()
         self.file_menu.add_command(label="Manually add Protein", command=self.add_protein)
         self.file_menu.add_command(label="Batch add Protein", command=self.batch_add_protein)
+        self.file_menu.add_separator()
         self.file_menu.add_command(label="Reload Data", command=self.reload_data)
+        self.file_menu.add_command(label="Fix {} in IDs", command=self.fix_bracket_in_ids)
 
         self.molecule_menu.add_command(label="Molecule Inspector", command=self.open_molecule_inspector)
         self.molecule_menu.add_command(label="Molecule Network Viewer", command=self.open_molecule_network_viewer)
+        self.molecule_menu.add_separator()
         self.molecule_menu.add_command(label="Fix Molecules", command=self.fix_molecules)
         self.molecule_menu.add_command(label="Edit Reaction", command=self.edit_reactions)
 
@@ -110,17 +116,21 @@ class MainView():
         self.proteins_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.proteins_tree = ttk.Treeview(self.proteins_frame, yscrollcommand=self.proteins_scrollbar.set, height=40)
-        self.proteins_tree['columns'] = ('Name', 'Full Name', 'Abundance', 'P-Value')
+        self.proteins_tree['columns'] = ('Unique', 'Name', 'Gene', 'Full Name', 'Abundance', 'P-Value')
         self.proteins_tree.pack()
 
         self.proteins_tree.column('#0',width=0,stretch='NO')
+        self.proteins_tree.column('Unique',width=50)
         self.proteins_tree.column('Name',width=80)
+        self.proteins_tree.column('Gene',width=80)
         self.proteins_tree.column('Full Name',width=500)
         self.proteins_tree.column('Abundance',width=80)
         self.proteins_tree.column('P-Value',width=90)
 
         self.proteins_tree.heading('#0', text='')
+        self.proteins_tree.heading('Unique', text='Unique')
         self.proteins_tree.heading('Name', text='Name')
+        self.proteins_tree.heading('Gene', text='Gene')
         self.proteins_tree.heading('Full Name', text='Full Name')
         self.proteins_tree.heading('Abundance', text='Abundance')
         self.proteins_tree.heading('P-Value', text='P-Value')
@@ -201,6 +211,19 @@ class MainView():
 
         self.root.mainloop()
 
+
+    def fix_bracket_in_ids(self):
+        new_dict = {}
+        for i in self.data.full_data:
+            if " " in i:
+                new_name = i.split(" ")[0]
+                new_dict[new_name] = self.data.full_data[i]
+                new_dict[new_name].name = new_name
+            else:
+                new_dict[i] = self.data.full_data[i]
+        self.data.full_data = new_dict
+        self.load_proteins_tree()
+        self.load_lists()
 
     def sort_p_value_asc(self):
         self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: -float(item[1].p_value)))
@@ -376,7 +399,8 @@ class MainView():
         self.update_options()
         self.search.set("")
 
-    def load_data_from_csv(self):
+    def load_data_from_csv2(self):
+        self.data.full_data = {}
         try:
             filepath = fd.askopenfilename()
             self.file_name = filepath
@@ -389,7 +413,61 @@ class MainView():
 
                 counter = 1
                 for index, row in data.iterrows():
-                    name = (row['Molecule Name'].split(' '))[0]
+                    proteins = (row['Molecule Name'].split(';'))
+                    genes = []
+                    for i in proteins:
+                        genes.append(i.split("_")[0])
+
+                    print(genes)
+
+                    unique = "Yes"
+
+                    if len(proteins) > 1:
+                        unique = "No"
+
+                    for g in range(len(genes)):
+                        try:
+                            if genes[g][0] == "Y":
+                                protein_data = self.get_protein_data(genes[g])
+                                self.data.full_data[protein_data[7]] = Compound(protein_data[7],protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(genes[g]).strip() + "/entry",protein_data[4],protein_data[5],protein_data[6],genes[g],unique)
+                            else:
+                                if "UNDEF" not in genes[g]:
+                                    self.excluded.append(genes[g])
+                            print(str(counter) + "/" + str(len(data)))
+                            counter += 1
+                        except:
+                            self.excluded.append(protein_data[7])
+                            print(str(counter) + "/" + str(len(data)))
+                            counter += 1
+
+                with open(filepath.replace('.csv','') + '.pickle', 'wb') as handle:
+                    pickle.dump(self.data.full_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+                with open(filepath.replace('.csv','') + '.txt', 'w') as f:
+                    for i in self.excluded:
+                        f.write(i+'\n')
+
+        except:
+            pass
+        self.load_proteins_tree()
+        self.load_lists()
+
+
+    def load_data_from_csv(self):
+        self.data.full_data = {}
+        try:
+            filepath = fd.askopenfilename()
+            self.file_name = filepath
+            if filepath:
+                #FORMAT CSV
+                data = pd.read_csv(filepath)
+                data = data.rename(columns={"﻿Molecule Name":"﻿Molecule Name","∆LFQ":"∆LFQ","Std. Dev.":"Std. Dev.","P-Value":"P-Value","Molecule Type":"Molecule_Type"})
+                data = data.drop(data[data.Molecule_Type == "METABOLITE"].index)
+                data = data.drop(data[data.Molecule_Type == "LIPID"].index)
+
+                counter = 1
+                for index, row in data.iterrows():
+                    name = (row['Molecule Name'].split('_'))[0]
                     gene_name = (row['Molecule Name'].split(' '))[1].replace("(","").replace(")","")
                     if ";" in gene_name:
                         genes = gene_name.split(";")
@@ -397,7 +475,7 @@ class MainView():
                         for g in range(len(genes)):
                             try:
                                 protein_data = self.get_protein_data(genes[g])
-                                self.data.full_data[gene_names[g]] = Compound(gene_names[g],protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(genes[g]).strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
+                                self.data.full_data[gene_names[g]] = Compound(gene_names[g],protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(genes[g]).strip() + "/entry",protein_data[4],protein_data[5],protein_data[6],genes[g],"No")
                                 print(str(counter) + "/" + str(len(data)))
                                 counter += 1
                             except:
@@ -409,8 +487,9 @@ class MainView():
 
                     else:
                         try:
+                            print(str(gene_name) + "55")
                             protein_data = self.get_protein_data(gene_name)
-                            self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(gene_name).strip() + "/entry",protein_data[4],protein_data[5],protein_data[6])
+                            self.data.full_data[name] = Compound(name,protein_data[0],row['P-Value'],protein_data[1],protein_data[2],protein_data[3],row['∆LFQ'],"https://beta.uniprot.org/uniprotkb/" + self.Get_protein_ID_from_genename(gene_name).strip() + "/entry",protein_data[4],protein_data[5],protein_data[6],gene_name,"Yes")
                             print(str(counter) + "/" + str(len(data)))
                             counter += 1
                         except:
@@ -466,6 +545,7 @@ class MainView():
         full_reaction_got = 0
         full_reaction = ""
         reaction = []
+        gene_name = ""
 
         for line in file:
             decoded_line = line.decode("utf-8")
@@ -489,6 +569,9 @@ class MainView():
                     checkNext = 0
                 else:
                     checkNext = 1
+            elif "GN   Name" in decoded_line:
+                g_n = decoded_line.split(";")[0]
+                gene_name = g_n.split("=")[1]
             elif checkNext == 1:
                 if "CC         " in decoded_line:
                     full_reaction += decoded_line.strip().replace("CC         "," ")
@@ -527,7 +610,7 @@ class MainView():
         P = list(dict.fromkeys(P))
 
 
-        return [name,locations,MF,BP,C,P,reaction]
+        return [name,locations,MF,BP,C,P,reaction,gene_name]
 
 
 
@@ -537,8 +620,9 @@ class MainView():
         return mg.getgene(gene_name)['uniprot']['Swiss-Prot']
 
     def get_protein_data(self,gene_name):
+        print(gene_name)
         protein_ID = self.Get_protein_ID_from_genename(gene_name)
-
+        print(protein_ID)
 
 
         name = ""
@@ -555,6 +639,7 @@ class MainView():
         full_reaction_got = 0
         full_reaction = ""
         reaction = []
+        gene_name = ""
 
         #for line in file:
             #print(line.decode("utf-8"))
@@ -575,6 +660,9 @@ class MainView():
             elif "DE   RecName" in decoded_line:
                 line_name = decoded_line.split('=')
                 name = (line_name[1].strip()).replace(';','')
+            elif "GN   Name" in decoded_line:
+                g_n = decoded_line.split(";")[0]
+                gene_name = g_n.split("=")[1]
             elif "Reaction=" in decoded_line:
                 full_reaction = decoded_line.strip()
                 if ";" in decoded_line:
@@ -620,7 +708,7 @@ class MainView():
         C = list(dict.fromkeys(C))
         P = list(dict.fromkeys(P))
 
-        return [name,locations,MF,BP,C,P,reaction]
+        return [name,locations,MF,BP,C,P,reaction,gene_name]
 
 
 
@@ -690,7 +778,7 @@ class MainView():
         self.proteins_tree.delete(*self.proteins_tree.get_children())
         counter = 0
         for i in self.data.full_data:
-            self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
+            self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].unique, self.data.full_data[i].protein_name, self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
             counter += 1
 
 
@@ -727,19 +815,19 @@ class MainView():
                 counter = 0
                 for i in self.data.full_data:
                     if selected2["values"][0] in self.data.full_data[i].cellular_component:
-                        self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
+                        self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].unique, self.data.full_data[i].protein_name, self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
                         counter += 1
             elif selected["values"][0] == 'Molecular Function':
                 counter = 0
                 for i in self.data.full_data:
                     if selected2["values"][0] in self.data.full_data[i].molecular_function:
-                        self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
+                        self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].unique, self.data.full_data[i].protein_name, self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
                         counter += 1
             elif selected["values"][0] == 'Biological Process':
                 counter = 0
                 for i in self.data.full_data:
                     if selected2["values"][0] in self.data.full_data[i].biological_process:
-                        self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
+                        self.proteins_tree.insert(parent='', index=counter, values=(self.data.full_data[i].unique, self.data.full_data[i].protein_name, self.data.full_data[i].name, self.data.full_data[i].recomended_name, self.data.full_data[i].abundance, self.data.full_data[i].p_value))
                         counter += 1
         except:
             self.load_proteins_tree()

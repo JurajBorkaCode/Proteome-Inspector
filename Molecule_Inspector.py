@@ -151,17 +151,17 @@ class Molecule_Inspector(SuperClass):
             for i in self.data:
                 check = self.check_filters(self.data[i].name)
                 if selected in self.data[i].consumes and check == 1:
-                    self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="consumes")
+                    self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="produces")
                     counter +=1
                 elif selected in self.data[i].produces and check == 1:
-                    self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="produces")
+                    self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="consumes")
                     counter +=1
                 elif (selected not in self.data[i].produces) and check == 1 and (selected not in self.data[i].consumes) and (" " + selected + " " in self.data[i].reaction):
                     self.protein_tree.insert(parent='', index=counter, values=(self.data[i].name, self.data[i].recomended_name, self.data[i].abundance, self.data[i].p_value), tags="N_A")
                     counter +=1
 
-            self.protein_tree.tag_configure('consumes', foreground="red")
             self.protein_tree.tag_configure('produces', foreground="green")
+            self.protein_tree.tag_configure('consumes', foreground="red")
             self.protein_tree.tag_configure('N_A', foreground="black")
             self.protein_reaction_text.config(state="normal")
             self.protein_reaction_text.delete("1.0","end-1c")

@@ -1,51 +1,29 @@
 Protein ID,Protein Name,Abundance,P-Value,status
-GRE2,NADPH-dependent methylglyoxal reductase GRE2,1.43714,0.000120645,produces
-GLT1,Glutamate synthase [NADH],-0.558084,0.000123061,produces
-LYS12,"Homoisocitrate dehydrogenase, mitochondrial",0.924182,0.000595294,produces
-YHB1,Flavohemoprotein,-1.20957,0.001389863,consumes
-LYS1,"Saccharopine dehydrogenase [NAD(+), L-lysine-forming] {ECO:0000303|PubMed:418069}",1.06495,0.001745354,produces
-SER33,D-3-phosphoglycerate dehydrogenase 2,0.79246,0.003101902,produces
-GDH2,NAD-specific glutamate dehydrogenase,0.670264,0.003794901,produces
-MET13,Methylenetetrahydrofolate reductase 2,0.553545,0.004323512,produces
-IMD4,Inosine-5'-monophosphate dehydrogenase 4 {ECO:0000255|HAMAP-Rule:MF_03156},-0.480421,0.004751168,produces
-PUT2,"Delta-1-pyrroline-5-carboxylate dehydrogenase, mitochondrial",0.153151,0.005337415,produces
-MTD1,Methylenetetrahydrofolate dehydrogenase [NAD(+)],-0.40135,0.015999125,produces
-BDH1,"(R,R)-butanediol dehydrogenase",0.395852,0.016506804,produces
-LPD1,"Dihydrolipoyl dehydrogenase, mitochondrial",-0.313655,0.020029674,produces
-HIS4,Histidine biosynthesis trifunctional protein {ECO:0000305},-0.275528,0.021360124,produces
-ALD2,Aldehyde dehydrogenase [NAD(P)+] 1 {ECO:0000305},0.530154,0.026745274,produces
-OSM1,Fumarate reductase 2,0.293443,0.047165016,produces
-GPD1,Glycerol-3-phosphate dehydrogenase [NAD(+)] 1,0.268797,0.079087799,produces
-TDH1,Glyceraldehyde-3-phosphate dehydrogenase 1,0.891975,0.088701941,produces
-IDH2,"Isocitrate dehydrogenase [NAD] subunit 2, mitochondrial",0.301451,0.094686982,produces
-IMD3,Inosine-5'-monophosphate dehydrogenase 3 {ECO:0000255|HAMAP-Rule:MF_03156},-0.257311,0.125315312,produces
-TDH2,Glyceraldehyde-3-phosphate dehydrogenase 2,0.510537,0.126775259,produces
-IDH1,"Isocitrate dehydrogenase [NAD] subunit 1, mitochondrial",0.370372,0.127581142,produces
-GPD2,"Glycerol-3-phosphate dehydrogenase [NAD(+)] 2, mitochondrial {ECO:0000303|PubMed:7476212}",0.2005,0.157426478,produces
-NPY1,NAD-capped RNA hydrolase NPY1 {ECO:0000305},0.177628,0.160775795,consumes
-ARA2,D-arabinose 1-dehydrogenase,0.862131,0.171290733,produces
-MET12,Methylenetetrahydrofolate reductase 1,0.190085,0.190146673,produces
-ERG9,Squalene synthase ERG9 {ECO:0000303|PubMed:1807826},-0.12026,0.193072266,consumes
-SER3,D-3-phosphoglycerate dehydrogenase 1,0.944884,0.196174475,produces
-MCR1,NADH-cytochrome b5 reductase 2 {ECO:0000303|PubMed:8001120},0.37219,0.217692464,consumes
-ADH3,"Alcohol dehydrogenase 3, mitochondrial",-0.312514,0.226351747,produces
-IMD2,Inosine-5'-monophosphate dehydrogenase 2 {ECO:0000255|HAMAP-Rule:MF_03156},-0.367361,0.230428301,produces
-MDH1,"Malate dehydrogenase, mitochondrial",0.0842988,0.242052436,produces
-SFA1,S-(hydroxymethyl)glutathione dehydrogenase {ECO:0000250|UniProtKB:P06525},0.0746271,0.285965209,produces
-POS5,"NADH kinase POS5, mitochondrial",-0.63254,0.314113624,consumes
-NDE1,"External NADH-ubiquinone oxidoreductase 1, mitochondrial",0.0845686,0.364035052,consumes
-FRD1,Fumarate reductase 1,-0.110766,0.418929383,produces
-ALD5,"Aldehyde dehydrogenase 5, mitochondrial {ECO:0000303|PubMed:9473035}",-0.0621558,0.476387939,produces
-PRO3,Pyrroline-5-carboxylate reductase,0.110867,0.48174663,produces
-ALD4,"Potassium-activated aldehyde dehydrogenase, mitochondrial {ECO:0000303|PubMed:9169874}",0.162661,0.559264852,produces
-ADH1,Alcohol dehydrogenase 1,-0.0480713,0.608989579,produces
-MDH3,"Malate dehydrogenase, peroxisomal",0.0493417,0.638038781,produces
-HFD1,Fatty aldehyde dehydrogenase HFD1,0.0561181,0.661380858,produces
-TDH3,Glyceraldehyde-3-phosphate dehydrogenase 3,-0.012373,0.736789597,produces
-HOM6,Homoserine dehydrogenase,0.0278002,0.762006524,produces
-NDI1,"Rotenone-insensitive NADH-ubiquinone oxidoreductase, mitochondrial",0.0731474,0.882944677,consumes
-ADH5,Alcohol dehydrogenase 5,0.0462317,0.892702893,produces
-ARA1,D-arabinose dehydrogenase [NAD(P)+] heavy chain,0.00923007,0.941538347,produces
-MDH2,"Malate dehydrogenase, cytoplasmic",0.0114064,0.954685843,produces
-PGA3,Plasma membrane-associated coenzyme Q6 reductase PGA3,-0.00659627,0.955528397,consumes
-ALD6,"Magnesium-activated aldehyde dehydrogenase, cytosolic {ECO:0000303|PubMed:9473035}",0.00555316,0.956796207,produces
+LYS12,"Homoisocitrate dehydrogenase, mitochondrial",0.529760471,0.001073424,consumes
+ADH3,"Alcohol dehydrogenase 3, mitochondrial",0.528479122,0.001153846,consumes
+NDE1,"External NADH-ubiquinone oxidoreductase 1, mitochondrial",-0.678276331,0.001189935,produces
+ALD5,"Aldehyde dehydrogenase 5, mitochondrial {ECO:0000303|PubMed:9473035}",1.663728926,0.001284226,consumes
+MDH1,"Malate dehydrogenase, mitochondrial",-0.679394718,0.001756235,consumes
+IDH1,"Isocitrate dehydrogenase [NAD] subunit 1, mitochondrial",-0.670874815,0.001984964,consumes
+GPD1,Glycerol-3-phosphate dehydrogenase [NAD(+)] 1,-1.926710999,0.00249372,consumes
+YHB1,Flavohemoprotein,-0.952746871,0.003808831,produces
+NDI1,"Rotenone-insensitive NADH-ubiquinone oxidoreductase, mitochondrial",-0.448762562,0.003974384,produces
+ALD4,"Potassium-activated aldehyde dehydrogenase, mitochondrial {ECO:0000303|PubMed:9169874}",0.946721259,0.004255536,consumes
+MDH3,"Malate dehydrogenase, peroxisomal",-1.079000613,0.004850117,consumes
+ERG9 {ECO:0000303|PubMed:1807826},Squalene synthase ERG9 {ECO:0000303|PubMed:1807826},-0.673144035,0.009825852,produces
+HOM6,Homoserine dehydrogenase,-0.527589706,0.01224617,consumes
+IDH2,"Isocitrate dehydrogenase [NAD] subunit 2, mitochondrial",-0.800133853,0.018693972,consumes
+POS5,"NADH kinase POS5, mitochondrial",0.219456431,0.022577307,produces
+LPD1,"Dihydrolipoyl dehydrogenase, mitochondrial",-0.513653278,0.023826758,consumes
+ADH1,Alcohol dehydrogenase 1,-0.859131721,0.052959956,consumes
+NDE2,"External NADH-ubiquinone oxidoreductase 2, mitochondrial",0.518389745,0.093271291,produces
+OSM1,Fumarate reductase 2,-0.405098917,0.110884196,consumes
+LYS1 {ECO:0000312|SGD:S000001473},"Saccharopine dehydrogenase [NAD(+), L-lysine-forming] {ECO:0000303|PubMed:418069}",-0.801778465,0.142431458,consumes
+ALD6,"Magnesium-activated aldehyde dehydrogenase, cytosolic {ECO:0000303|PubMed:9473035}",-0.679932241,0.152204854,consumes
+PGA3,Plasma membrane-associated coenzyme Q6 reductase PGA3,0.283485832,0.304745655,produces
+MDH2,"Malate dehydrogenase, cytoplasmic",-0.159759715,0.57969333,consumes
+ADH4,Alcohol dehydrogenase 4,0.05850023,0.776359196,consumes
+MCR1 {ECO:0000303|PubMed:8001120},NADH-cytochrome b5 reductase 2 {ECO:0000303|PubMed:8001120},-0.038760349,0.790114243,produces
+HFD1,Fatty aldehyde dehydrogenase HFD1,-0.033468774,0.943213128,consumes
+GPD2 {ECO:0000303|PubMed:7476212},"Glycerol-3-phosphate dehydrogenase [NAD(+)] 2, mitochondrial {ECO:0000303|PubMed:7476212}",-0.002181585,0.991690235,consumes
+PUT2,"Delta-1-pyrroline-5-carboxylate dehydrogenase, mitochondrial",0.000563882,0.998751776,consumes

@@ -1,0 +1,27 @@
+Protein 1,Connection 1,Protein 2,Connection 2,Protein 3,Connection 3,Protein 4,Viability (0.05),Largest P-Value
+YME1 (1.48895e-06),protein folding,SSA4 (0.005809005),vesicle-mediated transport,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),protein folding,SSA1 (0.05036967),vesicle-mediated transport,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),proteolysis,RIM11 (0.178215713),protein phosphorylation,SNF1 (0.868380581),filamentous growth,GRE2 (0.000120645),0,0.868380581
+YME1 (1.48895e-06),proteolysis,RIM11 (0.178215713),protein phosphorylation,SNF4 (0.838323862),filamentous growth,GRE2 (0.000120645),0,0.838323862
+YME1 (1.48895e-06),mitochondrion organization,PUF3 (0.005060709),intracellular mRNA localization,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),proteolysis,DDI1 (0.043004951),vesicle-mediated transport,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),mitochondrion organization,PHB2 (0.203841514),mitochondrion inheritance,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),mitochondrion organization,DNM1 (0.076004073),mitochondrion inheritance,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),mitochondrion organization,DNM1 (0.076004073),peroxisome organization,SNF4 (0.838323862),filamentous growth,GRE2 (0.000120645),0,0.838323862
+YME1 (1.48895e-06),protein folding,SSA2 (0.043549002),vesicle-mediated transport,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),mitochondrion organization,TPK3 (0.416647521),protein phosphorylation,SNF1 (0.868380581),filamentous growth,GRE2 (0.000120645),0,0.868380581
+YME1 (1.48895e-06),mitochondrion organization,TPK3 (0.416647521),protein phosphorylation,SNF4 (0.838323862),filamentous growth,GRE2 (0.000120645),0,0.838323862
+YME1 (1.48895e-06),protein folding,SSE1 (0.080957403),autophagy,SNF4 (0.838323862),filamentous growth,GRE2 (0.000120645),0,0.838323862
+YME1 (1.48895e-06),mitochondrion organization,RSP5 (0.362152682),late endosome to vacuole transport via multivesicular body sorting pathway,VPS60 (0.311860238),filamentous growth,GRE2 (0.000120645),0,0.362152682
+YME1 (1.48895e-06),mitochondrion organization,RSP5 (0.362152682),regulation of initiation of mating projection growth,PEA2 (0.216497986),filamentous growth,GRE2 (0.000120645),0,0.362152682
+YME1 (1.48895e-06),protein folding,PDI1 (0.474724605),response to endoplasmic reticulum stress,SNF1 (0.868380581),filamentous growth,GRE2 (0.000120645),0,0.868380581
+YME1 (1.48895e-06),mitochondrion organization,ZIM17 (0.868045634),response to unfolded protein,SNF1 (0.868380581),filamentous growth,GRE2 (0.000120645),0,0.868380581
+YME1 (1.48895e-06),protein folding,CPR1 (0.581871794),protein transport,VPS60 (0.311860238),filamentous growth,GRE2 (0.000120645),0,0.581871794
+YME1 (1.48895e-06),proteolysis,RIM20 (0.396275285),invasive growth in response to glucose limitation,SNF1 (0.868380581),filamentous growth,GRE2 (0.000120645),0,0.868380581
+YME1 (1.48895e-06),proteolysis,MKC7 (0.609538789),fungal-type cell wall organization,GAS1 (0.676617876),filamentous growth,GRE2 (0.000120645),0,0.676617876
+YME1 (1.48895e-06),protein folding,PLP2 (0.021412494),actin cytoskeleton organization,CAP2 (0.070446582),filamentous growth,GRE2 (0.000120645),0,0.070446582
+YME1 (1.48895e-06),protein folding,EUG1 (0.032460812),response to endoplasmic reticulum stress,SNF1 (0.868380581),filamentous growth,GRE2 (0.000120645),0,0.868380581
+YME1 (1.48895e-06),mitochondrion organization,PHB1 (0.092373806),mitochondrion inheritance,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),mitochondrion organization,MGM1 (0.179190582),mitochondrion inheritance,TPM1 (0.273787971),filamentous growth,GRE2 (0.000120645),0,0.273787971
+YME1 (1.48895e-06),protein folding,SHR3 (0.253819582),protein transport,VPS60 (0.311860238),filamentous growth,GRE2 (0.000120645),0,0.311860238
+YME1 (1.48895e-06),mitochondrion organization,SUN4 (0.029874208),fungal-type cell wall organization,GAS1 (0.676617876),filamentous growth,GRE2 (0.000120645),0,0.676617876
