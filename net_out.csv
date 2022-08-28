@@ -1,5 +1,0 @@
-Protein 1,Connection 1,Protein 2,Connection 2,Protein 3,Connection 3,Protein 4,Viability (0.05),Largest P-Value
-YME1 (0.0),protein folding,TSA1 (0.003883579),cell redox homeostasis,LPD1 (0.023826758),pyruvate metabolic process,CDC19 (0.002745105),1,0.023826758
-YME1 (0.0),mitochondrion organization,POR1 (0.481483906),cell redox homeostasis,LPD1 (0.023826758),pyruvate metabolic process,CDC19 (0.002745105),0,0.481483906
-YME1 (0.0),proteolysis,QCR2 (0.014009376),proton transmembrane transport,PFK1 (0.014894003),glycolytic process,CDC19 (0.002745105),1,0.014894003
-YME1 (0.0),proteolysis,QCR2 (0.014009376),proton transmembrane transport,PFK2 (0.00747158),glycolytic process,CDC19 (0.002745105),1,0.014009376
