@@ -96,8 +96,8 @@ class Network_Viewer(SuperClass):
         self.btn_back.pack(side="right", padx=(5,10), pady=(5,10))
         self.btn_extract = ttk.Button(self, text='Extract Data', width=15, command=self.extract_data)
         self.btn_extract.pack(side="right", padx=(5,10), pady=(5,10))
-        self.btn_network = ttk.Button(self, text='Network', width=10, command=self.paths_network)
-        self.btn_network.pack(side="right", padx=(5,10), pady=(5,10))
+        #self.btn_network = ttk.Button(self, text='Network', width=10, command=self.paths_network)
+        #self.btn_network.pack(side="right", padx=(5,10), pady=(5,10))
         self.btn_short_network = ttk.Button(self, text='Shortest Paths', width=20, command=self.paths_short_network)
         self.btn_short_network.pack(side="right", padx=(5,10), pady=(5,10))
 
@@ -249,7 +249,7 @@ class Network_Viewer(SuperClass):
                 else:
                     G.add_node(self.data[i].name,label = self.data[i].name, color="#bbf2c2",shape=shape_, mass=mass_, physics=physics_, size=size_, level=level_)
             else:
-                G.add_node(self.data[x].name,label = self.data[x].name, color="#a0a0a0",shape=shape_, mass=mass_, physics=physics_, size=size_, level=(int(i)+1))
+                G.add_node(self.data[x].name,label = self.data[x].name, color="#a0a0a0",shape=shape_, mass=mass_, physics=physics_, size=size_)
 
             counter += 1
 
@@ -367,6 +367,7 @@ class Network_Viewer(SuperClass):
         max_len = int(self.max_length.get())
         edge_labels = self.include_edge.get()
         abundance_labels = self.include_abundance.get()
+        self.layers = {}
 
         counter = 0
         if self.network.has_node(start.upper()) and self.network.has_node(end.upper()):

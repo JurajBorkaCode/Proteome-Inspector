@@ -181,20 +181,20 @@ class Molecule_Inspector(SuperClass):
         self.back_btn.pack(side="right", padx=(5,10), pady=(5,10))
         self.extract_btn = ttk.Button(self, text='Extract', width=15, command=self.extract_data_to_csv)
         self.extract_btn.pack(side="right", padx=(5,10), pady=(5,10))
-        self.remove_filter_btn = ttk.Button(self, text='Remove Filter', width=20, command=self.remove_filter)
-        self.remove_filter_btn.pack(side="right", padx=(5,10), pady=(5,10))
+        #self.remove_filter_btn = ttk.Button(self, text='Remove Filter', width=20, command=self.remove_filter)
+        #self.remove_filter_btn.pack(side="right", padx=(5,10), pady=(5,10))
         self.add_filter_btn = ttk.Button(self, text='Add Filter', width=20, command=self.add_filter)
         self.add_filter_btn.pack(side="right", padx=(5,10), pady=(5,10))
 
     def extract_data_to_csv(self):
         print(1)
-        out_data = {"Protein ID" : [],"Protein Name" : [],"Abundance" : [],"P-Value" : [],"status" : []}
+        out_data = {"Protein ID" : [],"Protein Name" : [],"Abundance" : [],"P-Value" : []}
         for line in self.protein_tree.get_children():
             out_data["Protein ID"].append(self.protein_tree.item(line)['values'][0])
             out_data["Protein Name"].append(self.protein_tree.item(line)['values'][1])
             out_data["Abundance"].append(self.protein_tree.item(line)['values'][2])
             out_data["P-Value"].append(self.protein_tree.item(line)['values'][3])
-            out_data["status"].append(self.protein_tree.item(line)['tags'][0])
+            #out_data["status"].append(self.protein_tree.item(line)['tags'][0])
 
         out_df = pd.DataFrame(data=out_data)
 

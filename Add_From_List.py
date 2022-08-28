@@ -34,6 +34,10 @@ class Add_From_List(SuperClass):
         self.P_value.set("P-Value")
         self.abundance = tk.StringVar()
         self.abundance.set("Abundance")
+        self.unique = tk.StringVar()
+        self.unique.set("Unique")
+        self.sys_name = tk.StringVar()
+        self.sys_name.set("Systematic Name")
         self.missing_data = []
         self.data = data
         self.file = file
@@ -45,7 +49,7 @@ class Add_From_List(SuperClass):
 
 
 
-        super().__init__(parent, title, width = 200, height = 170, take_focus=True, extendable=False)
+        super().__init__(parent, title, width = 200, height = 230, take_focus=True, extendable=False)
 
     def update_data(self,var,index,mode):
         try:
@@ -74,6 +78,10 @@ class Add_From_List(SuperClass):
         self.selection = tk.OptionMenu(frame,self.clicked,*self.missing_data)
         self.selection.pack(side=tk.TOP)
 
+        self.unique_e = ttk.Entry(frame, font=("Calibri 12"), textvariable = self.unique, width=100)
+        self.unique_e.pack(side=tk.TOP)
+        self.sys_name_e = ttk.Entry(frame, font=("Calibri 12"), textvariable = self.sys_name, width=100)
+        self.sys_name_e.pack(side=tk.TOP)
         self.name_e = ttk.Entry(frame, font=("Calibri 12"), textvariable = self.name, width=100)
         self.name_e.pack(side=tk.TOP)
         self.p_val = ttk.Entry(frame, font=("Calibri 12"), textvariable = self.P_value, width=100)
@@ -91,7 +99,7 @@ class Add_From_List(SuperClass):
 
     def add_pro(self):
         protein_data = self.get_protein_data()
-        self.compound = Compound(self.name.get(),protein_data[0],self.P_value.get(),protein_data[1],protein_data[2],protein_data[3],self.abundance.get(),self.web.get().replace(".txt",""),protein_data[4],protein_data[5],protein_data[6])
+        self.compound = Compound(self.name.get(),protein_data[0],self.P_value.get(),protein_data[1],protein_data[2],protein_data[3],self.abundance.get(),self.web.get().replace(".txt",""),protein_data[4],protein_data[5],protein_data[6],self.sys_name.get(),self.unique.get())
         self.submit = True
         self.out_name = self.name.get()
         self.destroy()

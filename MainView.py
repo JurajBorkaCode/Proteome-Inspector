@@ -226,22 +226,30 @@ class MainView():
         self.load_lists()
 
     def sort_p_value_asc(self):
-        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: -float(item[1].p_value)))
-        self.load_proteins_tree()
-        self.load_lists()
-
-    def sort_p_value_dec(self):
         self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: float(item[1].p_value)))
         self.load_proteins_tree()
         self.load_lists()
 
+    def sort_p_value_dec(self):
+        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: -float(item[1].p_value)))
+        self.load_proteins_tree()
+        self.load_lists()
+
     def sort_abundance_asc(self):
-        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: -float(item[1].abundance)))
+        for i in self.data.full_data:
+            if self.data.full_data[i].abundance == '#NAME?':
+                self.data.full_data[i].abundance = 0
+
+        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: float(item[1].abundance)))
         self.load_proteins_tree()
         self.load_lists()
 
     def sort_abundance_dec(self):
-        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: float(item[1].abundance)))
+        for i in self.data.full_data:
+            if self.data.full_data[i].abundance == '#NAME?':
+                self.data.full_data[i].abundance = 0
+
+        self.data.full_data = dict(sorted(self.data.full_data.items(), key=lambda item: -float(item[1].abundance)))
         self.load_proteins_tree()
         self.load_lists()
 
@@ -278,7 +286,7 @@ class MainView():
         a = Molecule_Inspector(self.root,"Molecule Inspector",self.data.full_data)
 
     def open_molecule_network_viewer(self):
-        a = Molecule_Network_Viewer(self.root,"Molecule Network Viewer",self.data.full_data,self.proteins_tree.item(self.proteins_tree.focus())["values"][0])
+        a = Molecule_Network_Viewer(self.root,"Molecule Network Viewer",self.data.full_data,"NAD")
 
     def fix_molecules(self):
         new_data = copy.deepcopy(self.data.full_data)
@@ -517,7 +525,7 @@ class MainView():
         for i in self.data.full_data:
             try:
                 protein_data = self.get_protein_data_from_url(self.data.full_data[i].web.replace("/entry",".txt"))
-                new_data[self.data.full_data[i].name] = Compound(self.data.full_data[i].name,protein_data[0],self.data.full_data[i].p_value,protein_data[1],protein_data[2],protein_data[3],self.data.full_data[i].abundance,self.data.full_data[i].web,protein_data[4],protein_data[5],protein_data[6])
+                new_data[self.data.full_data[i].name] = Compound(self.data.full_data[i].name,protein_data[0],self.data.full_data[i].p_value,protein_data[1],protein_data[2],protein_data[3],self.data.full_data[i].abundance,self.data.full_data[i].web,protein_data[4],protein_data[5],protein_data[6],self.data.full_data[i].protein_name,self.data.full_data[i].unique)
                 print(str(counter) + "/" + size)
                 counter += 1
             except:

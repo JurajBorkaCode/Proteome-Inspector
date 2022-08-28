@@ -1,29 +1,77 @@
-Protein ID,Protein Name,Abundance,P-Value,status
-LYS12,"Homoisocitrate dehydrogenase, mitochondrial",0.529760471,0.001073424,consumes
-ADH3,"Alcohol dehydrogenase 3, mitochondrial",0.528479122,0.001153846,consumes
-NDE1,"External NADH-ubiquinone oxidoreductase 1, mitochondrial",-0.678276331,0.001189935,produces
-ALD5,"Aldehyde dehydrogenase 5, mitochondrial {ECO:0000303|PubMed:9473035}",1.663728926,0.001284226,consumes
-MDH1,"Malate dehydrogenase, mitochondrial",-0.679394718,0.001756235,consumes
-IDH1,"Isocitrate dehydrogenase [NAD] subunit 1, mitochondrial",-0.670874815,0.001984964,consumes
-GPD1,Glycerol-3-phosphate dehydrogenase [NAD(+)] 1,-1.926710999,0.00249372,consumes
-YHB1,Flavohemoprotein,-0.952746871,0.003808831,produces
-NDI1,"Rotenone-insensitive NADH-ubiquinone oxidoreductase, mitochondrial",-0.448762562,0.003974384,produces
-ALD4,"Potassium-activated aldehyde dehydrogenase, mitochondrial {ECO:0000303|PubMed:9169874}",0.946721259,0.004255536,consumes
-MDH3,"Malate dehydrogenase, peroxisomal",-1.079000613,0.004850117,consumes
-ERG9 {ECO:0000303|PubMed:1807826},Squalene synthase ERG9 {ECO:0000303|PubMed:1807826},-0.673144035,0.009825852,produces
-HOM6,Homoserine dehydrogenase,-0.527589706,0.01224617,consumes
-IDH2,"Isocitrate dehydrogenase [NAD] subunit 2, mitochondrial",-0.800133853,0.018693972,consumes
-POS5,"NADH kinase POS5, mitochondrial",0.219456431,0.022577307,produces
-LPD1,"Dihydrolipoyl dehydrogenase, mitochondrial",-0.513653278,0.023826758,consumes
-ADH1,Alcohol dehydrogenase 1,-0.859131721,0.052959956,consumes
-NDE2,"External NADH-ubiquinone oxidoreductase 2, mitochondrial",0.518389745,0.093271291,produces
-OSM1,Fumarate reductase 2,-0.405098917,0.110884196,consumes
-LYS1 {ECO:0000312|SGD:S000001473},"Saccharopine dehydrogenase [NAD(+), L-lysine-forming] {ECO:0000303|PubMed:418069}",-0.801778465,0.142431458,consumes
-ALD6,"Magnesium-activated aldehyde dehydrogenase, cytosolic {ECO:0000303|PubMed:9473035}",-0.679932241,0.152204854,consumes
-PGA3,Plasma membrane-associated coenzyme Q6 reductase PGA3,0.283485832,0.304745655,produces
-MDH2,"Malate dehydrogenase, cytoplasmic",-0.159759715,0.57969333,consumes
-ADH4,Alcohol dehydrogenase 4,0.05850023,0.776359196,consumes
-MCR1 {ECO:0000303|PubMed:8001120},NADH-cytochrome b5 reductase 2 {ECO:0000303|PubMed:8001120},-0.038760349,0.790114243,produces
-HFD1,Fatty aldehyde dehydrogenase HFD1,-0.033468774,0.943213128,consumes
-GPD2 {ECO:0000303|PubMed:7476212},"Glycerol-3-phosphate dehydrogenase [NAD(+)] 2, mitochondrial {ECO:0000303|PubMed:7476212}",-0.002181585,0.991690235,consumes
-PUT2,"Delta-1-pyrroline-5-carboxylate dehydrogenase, mitochondrial",0.000563882,0.998751776,consumes
+Protein ID,Protein Name,Abundance,P-Value
+PMA2,Plasma membrane ATPase 2,-1.42476819,0.002606204
+CDC19,Pyruvate kinase 1,-1.136660865,0.002745105
+PET112,"Glutamyl-tRNA(Gln) amidotransferase subunit B, mitochondrial {ECO:0000255|HAMAP-Rule:MF_03147}",0.018282287,0.90312816
+GAL1,Galactokinase,-1.345206944,0.001594655
+MIS1,"C-1-tetrahydrofolate synthase, mitochondrial {ECO:0000305}",0.133369174,0.342590946
+CDC28,Cyclin-dependent kinase 1 {ECO:0000303|PubMed:14574415},-0.603181964,0.360456097
+GLK1,Glucokinase-1,-2.214554723,0.001867463
+SAT4,Serine/threonine-protein kinase HAL4/SAT4,#NAME?,0.0
+PGK1,Phosphoglycerate kinase,-1.15855271,0.0002558
+SUB2,ATP-dependent RNA helicase SUB2,-2.028967614,0.007232625
+CDC48,Cell division control protein 48 {ECO:0000305|PubMed:6749598},-0.298635298,0.369492652
+DHH1,ATP-dependent RNA helicase DHH1 {ECO:0000305},-0.854833625,0.052777039
+VMA1,V-type proton ATPase catalytic subunit A {ECO:0000303|PubMed:2139027},0.229778487,0.605414412
+SSB1,Ribosome-associated molecular chaperone SSB1 {ECO:0000303|PubMed:11739779},-1.503571301,0.001073424
+ENA5,Sodium transport ATPase 5,-1.09475138,0.003900761
+DNF2,Phospholipid-transporting ATPase DNF2,-1.293594144,0.223705454
+YCF1,Metal resistance protein YCF1,0.441994222,0.082616819
+RVB1,RuvB-like protein 1,-0.028127746,0.931251822
+MSS116,"ATP-dependent RNA helicase MSS116, mitochondrial",-0.291963618,0.041881949
+FMN1,Riboflavin kinase,Inf,0.0
+GUK1,Guanylate kinase,-1.278328105,0.200755924
+SNF1,Carbon catabolite-derepressing protein kinase {ECO:0000303|PubMed:3526554},#NAME?,0.0
+GIN4,Serine/threonine-protein kinase GIN4,#NAME?,0.0
+SPF1,Endoplasmic reticulum transmembrane helix translocase {ECO:0000305},-0.889106771,0.020160985
+HOM3,Aspartokinase,#NAME?,0.0
+"ARG5,6","Protein ARG5,6, mitochondrial",0.205772657,0.103520124
+DNF1,Phospholipid-transporting ATPase DNF1,#NAME?,0.0
+ADK2,"GTP:AMP phosphotransferase, mitochondrial {ECO:0000255|HAMAP-Rule:MF_03169}",0.511753572,0.035846612
+FAU1,5-formyltetrahydrofolate cyclo-ligase,-0.469818843,0.178130215
+HXK1,Hexokinase-1,-2.305572482,0.000238409
+PMC1,Calcium-transporting ATPase 2,-0.072447109,0.705490714
+PKP2,"[Pyruvate dehydrogenase (acetyl-transferring)] kinase 2, mitochondrial {ECO:0000305}",0.360529284,0.157917412
+MRH4,"ATP-dependent RNA helicase MRH4, mitochondrial",-0.316413551,0.103520124
+PMR1,Calcium-transporting ATPase 1,-0.366783393,0.400728228
+HXK2,Hexokinase-2,-2.840620059,0.002372377
+MSP1,Outer mitochondrial transmembrane helix translocase {ECO:0000305},0.172646323,0.619841416
+GTF1,"Glutamyl-tRNA(Gln) amidotransferase subunit F, mitochondrial {ECO:0000255|HAMAP-Rule:MF_03151}",-0.10446235,0.735115416
+PFK1,ATP-dependent 6-phosphofructokinase subunit alpha {ECO:0000255|HAMAP-Rule:MF_03184},-1.208616879,0.014894003
+LSC2,"Succinate--CoA ligase [ADP-forming] subunit beta, mitochondrial {ECO:0000255|HAMAP-Rule:MF_03219, ECO:0000305|PubMed:9874242}",0.036530326,0.619841416
+YOR1,Oligomycin resistance ATP-dependent permease YOR1 {ECO:0000305},-1.186948824,0.003900761
+GUT1,Glycerol kinase,Inf,0.0
+KAR2,Endoplasmic reticulum chaperone BiP {ECO:0000305},-0.367926525,0.102831952
+SSC1,"Import motor subunit, mitochondrial {ECO:0000305}",0.345937557,0.09244982
+ATP2,"ATP synthase subunit beta, mitochondrial",-0.228924779,0.112594717
+YNK1,Nucleoside diphosphate kinase {ECO:0000303|PubMed:5793714},-0.468973727,0.233895232
+LHS1,Heat shock protein 70 homolog LHS1,-0.991168394,0.008983009
+NNR2,ATP-dependent (S)-NAD(P)H-hydrate dehydratase {ECO:0000255|HAMAP-Rule:MF_03157},-0.980210302,0.343389152
+TOR2,Serine/threonine-protein kinase TOR2,#NAME?,0.0
+TIF2,ATP-dependent RNA helicase eIF4A,-2.513764929,0.001153846
+KIN2,Serine/threonine-protein kinase KIN2,#NAME?,0.0
+YEF3,Elongation factor 3A,-2.167609211,0.000347969
+HEF3,Elongation factor 3B,-2.167609211,0.000347969
+STT4,Phosphatidylinositol 4-kinase STT4,-1.540522169,0.000427673
+SSQ1,"Iron-sulfur cluster biogenesis chaperone, mitochondrial {ECO:0000305}",0.539682767,0.002228692
+PIF1,ATP-dependent DNA helicase PIF1 {ECO:0000255|HAMAP-Rule:MF_03176},0.77414451,0.215153069
+FOL3,Dihydrofolate synthetase,-0.237063754,0.401846588
+PFK2,ATP-dependent 6-phosphofructokinase subunit beta {ECO:0000255|HAMAP-Rule:MF_03184},-1.182276862,0.00747158
+HAS1,ATP-dependent RNA helicase HAS1,#NAME?,0.0
+HER2,"Glutamyl-tRNA(Gln) amidotransferase subunit A, mitochondrial {ECO:0000255|HAMAP-Rule:MF_03150}",0.563036405,0.022577307
+YCK2,Casein kinase I homolog 2,-0.816210323,0.030628636
+CBK1,Serine/threonine-protein kinase CBK1,#NAME?,0.0
+MCK1,Protein kinase MCK1,-0.952555621,0.02483583
+ACC1,Acetyl-CoA carboxylase,-1.328999774,0.000940423
+CMK2,Calcium/calmodulin-dependent protein kinase II,#NAME?,0.0
+HMI1,"ATP-dependent DNA helicase HMI1, mitochondrial",0.032482045,0.873098774
+DBP5,ATP-dependent RNA helicase DBP5,-1.427768175,0.01062574
+LSC1,"Succinate--CoA ligase [ADP-forming] subunit alpha, mitochondrial {ECO:0000255|HAMAP-Rule:MF_03222, ECO:0000305|PubMed:9874242}",0.371162345,0.003135346
+DED1,ATP-dependent RNA helicase DED1 {ECO:0000305},-1.729883997,0.002498573
+DBP1,ATP-dependent RNA helicase DBP1,-1.729883997,0.002498573
+DBP2,ATP-dependent RNA helicase DBP2 {ECO:0000305},-1.729883997,0.002498573
+MET7,Folylpolyglutamate synthase,-0.406911994,0.004395385
+YPK9,Vacuolar cation-transporting ATPase YPK9,0.544795383,0.48119246
+SUV3,"ATP-dependent RNA helicase SUV3, mitochondrial",0.511842658,0.086029453
+PHO85,Cyclin-dependent protein kinase PHO85,#NAME?,0.0
+POS5,"NADH kinase POS5, mitochondrial",0.219456431,0.022577307
+RVB2,RuvB-like protein 2,1.18923986,0.040564994
